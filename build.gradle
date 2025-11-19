@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 def junitVersion = '5.10.0'
@@ -7,17 +8,19 @@ def mockitoVersion = '5.5.0'
 def assertjVersion = "3.24.2"
 def gsonVersion = '2.10.1'
 
-group 'uj.wmii.pwj.gvt'
-version '1.0'
+group = 'uj.wmii.pwj.gvt'
+version = '1.0'
 
-sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-
     implementation "com.google.code.gson:gson:$gsonVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
@@ -25,14 +28,26 @@ dependencies {
     testImplementation "org.assertj:assertj-core:$assertjVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-
 }
 
 test {
     useJUnitPlatform()
-    // enabled = false;
 }
 
-// application {
-//     mainClass = 'uj.wmii.pwj.gvt.Gvt'
-// }
+application {
+    mainClass = 'uj.wmii.pwj.gvt.Gvt'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'uj.wmii.pwj.gvt.Gvt'
+        )
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

@@ -12,38 +12,26 @@ public class Gvt {
     public Gvt(ExitHandler exitHandler) {
         this.exitHandler = exitHandler;
     }
-    private boolean isInitialized() {
-        Path cwd = Paths.get(".").toAbsolutePath().normalize();
-        Path gvtDir = cwd.resolve(".gvt");
-        return Files.isDirectory(gvtDir);
-    }
 
     public static void main(String... args) {
         Gvt gvt = new Gvt(new ExitHandler());
         gvt.mainInternal(args);
     }
+    
+    public void mainInternal(String... args) 
+    {     
+        
+        ExitHandler termiantor = new ExitHandler();
 
-    public void mainInternal(String... args) {
-     
-        // Path cwd = Paths.get(".").toAbsolutePath().normalize();
-        // versionService = new VersionServiceImpl(cwd.toString(), exitHandler);
+        if (args == null || args.length == 0) 
+        {
+            termiantor.exit(1, "Please specify command.");
+            return;
+        }
 
         versionService = new VersionServiceImpl(".", new ExitHandler());
-     
-        if (args == null || args.length == 0) {
-            exitHandler.exit(1, "Please specify command.");
-            return;
-        }
 
         String command = args[0];
-
-        if (!"init".equals(command) && !isInitialized()) 
-        {
-            exitHandler.exit(-2,
-                    "Current directory is not initialized. Please use init command to initialize.");
-            return;
-        }
-
         switch (command) {
             case "init":
                 handleInit(args);

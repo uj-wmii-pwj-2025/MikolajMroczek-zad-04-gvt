@@ -18,13 +18,15 @@ if [[ $? -ne 0 ]]; then
     exit 2
 fi
 rm -r -f message.out
+history_out=$(java -jar ../build/libs/04-gvt-1.0.jar history -last 1)
 
-if [[ $(java -jar ../build/libs/04-gvt-1.0.jar history -last 1) = "1: Added file: a.txt" ]]; then
+if [[ "$history_out" = "1: Added file: a.txt" ]]; then
   echo "pass version -last 1"
 else
+  # DEBUG – pokaż, co faktycznie wypisał program
+  echo ">>> Program wypisał: [$history_out]"
+
   cd -
   echo "fail version -last 1"
   exit 3
 fi
-
-cd -

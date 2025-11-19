@@ -19,11 +19,19 @@ if [[ $? -ne 0 ]]; then
 fi
 
 cmp -s message.out ../src/test/acceptance/expected07.out
-if [[ $? -ne 0 ]]; then
+ret=$?
+
+if [[ $ret -ne 0 ]]; then
+    echo ">>> Program wypisał:"
+    cat message.out
+    echo ">>> Oczekiwano:"
+    cat ../src/test/acceptance/expected07.out
+
     cd -
     echo "fail - invalid messages after commit."
     exit 3
 fi
+
 rm -r -f message.out
 
 if [[ $(java -jar ../build/libs/04-gvt-1.0.jar history -last 1) = "3: Committed file: b.txt" ]]; then
