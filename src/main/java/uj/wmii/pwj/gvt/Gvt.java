@@ -18,13 +18,10 @@ public class Gvt {
         gvt.mainInternal(args);
     }
     
-    public void mainInternal(String... args) 
-    {     
-        
+    public void mainInternal(String... args) {     
         ExitHandler termiantor = new ExitHandler();
 
-        if (args == null || args.length == 0) 
-        {
+        if (args == null || args.length == 0) {
             termiantor.exit(1, "Please specify command.");
             return;
         }
@@ -59,6 +56,7 @@ public class Gvt {
                 break;
         }
     }
+
     private String extractUserMessage(String... args) {
         if (args.length >= 3 && "-m".equals(args[args.length - 2])) {
             return args[args.length - 1];
@@ -66,13 +64,11 @@ public class Gvt {
         return "";
     }
 
-    private void handleInit(String... args) 
-    {
+    private void handleInit(String... args) {
         versionService.init("GVT initialized.");
     }
 
-    private void handleAdd(String... args) 
-    {
+    private void handleAdd(String... args) {
         String userMessage = extractUserMessage(args);
 
         String fileName = null;
@@ -88,8 +84,7 @@ public class Gvt {
         versionService.add(fileName, userMessage);
     }
 
-    private void handleDetach(String... args) 
-    {
+    private void handleDetach(String... args) {
         String userMessage = extractUserMessage(args);
 
         String fileName = null;
@@ -105,8 +100,7 @@ public class Gvt {
         versionService.detach(fileName, userMessage);
     }
 
-    private void handleCommit(String... args) 
-    {
+    private void handleCommit(String... args) {
         String userMessage = extractUserMessage(args);
 
         String fileName = null;
@@ -122,8 +116,7 @@ public class Gvt {
         versionService.commit(fileName, userMessage);
     }
 
-    private void handleCheckout(String... args) 
-    {
+    private void handleCheckout(String... args) {
         if (args.length < 2) {
             exitHandler.exit(60, "Invalid version number: ");
             return;
@@ -134,49 +127,38 @@ public class Gvt {
             Integer v = Integer.valueOf(versionStr);
             versionService.checkout(v);
         } catch (NumberFormatException e) {
-            // checkout – bez kropki na końcu wg specyfikacji/testów
             exitHandler.exit(60, "Invalid version number: " + versionStr);
         }
     }
 
-    private void handleHistory(String... args) 
-    {
+    private void handleHistory(String... args) {
         Integer last = null;
 
         if (args.length >= 3 && "-last".equals(args[1])) {
             try {
                 last = Integer.valueOf(args[2]);
             } catch (NumberFormatException e) {
-                // błędny parametr ignorujemy → tak jak brak
             }
         }
 
-        if (last == null) 
-        {
+        if (last == null) {
             versionService.history(0);
-        } 
-        else 
-        {
+        } else {
             versionService.history(last);
         }
     }
 
     private void handleVersion(String... args) {
-
-        if (args.length < 2) 
-        {
+        if (args.length < 2) {
             versionService.version(null);
             return;
         }
 
         String versionStr = args[1];
-        try 
-        {
+        try {
             Integer v = Integer.valueOf(versionStr);
             versionService.version(v);
-        } 
-        catch (NumberFormatException e) 
-        {
+        } catch (NumberFormatException e) {
             exitHandler.exit(60, "Invalid version number: " + versionStr + ".");
         }
     }
